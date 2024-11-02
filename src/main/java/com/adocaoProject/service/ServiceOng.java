@@ -68,5 +68,13 @@ public class ServiceOng {
         Ong ong = buscarOngPorId(id);
         ongRepository.delete(ong);
     }
+    public Ong salvarPet(Long ongId, List<Pets> pets) {
+        Ong ong = buscarOngPorId(ongId);
+        for (Pets pet : pets) {
+            pet.setOng(ong);
+        }
+        ong.getAnimais().addAll(pets);
+        return ongRepository.save(ong);
+    }
 
 }

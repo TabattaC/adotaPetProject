@@ -6,7 +6,7 @@ import com.adocaoProject.repository.OngRepository;
 import com.adocaoProject.repository.PetRepository;
 import com.adocaoProject.service.PetNotFoundExeception;
 import com.adocaoProject.service.ServicePet;
- import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -47,12 +47,13 @@ public class ServicePetTests {
     }
 
     @Test
-    public void testBuscarPetPorNome_DeveRetornarTodosOsPetsQuandoNomeForVazio() throws PetNotFoundExeception {
-                // Pode variar, se você quer que o comportamento ao passar "" retorne todos os pets
+    public void testSearchPetForNameShouldReturnAllPetsWhenNameWasEmpty() throws PetNotFoundExeception {
+        // Pode variar, se você quer que o comportamento ao passar "" retorne todos os pets
         when(petRepository.findByNomeContaining("")).thenReturn(pets);
         List<Pets> result = servicePet.buscarPetPorNome("");
         assertEquals(2, result.size());
     }
+
     @Test
     public void testSearchPetForNameMaiusculoShouldReturnListPets() throws PetNotFoundExeception {
         // Simula a chamada do repositório
@@ -62,6 +63,7 @@ public class ServicePetTests {
         assertEquals("Cachorro_teste1", result.get(0).getNome());
         assertEquals("Cachorro_teste2", result.get(1).getNome());
     }
+
     @Test
     public void testSearchPetForNameMinusculoShouldReturnListPets() throws PetNotFoundExeception {
         // Simula a chamada do repositório
@@ -81,6 +83,7 @@ public class ServicePetTests {
         assertEquals("Cachorro_teste1", result.get(0).getNome());
         assertEquals("Cachorro_teste2", result.get(1).getNome());
     }
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);

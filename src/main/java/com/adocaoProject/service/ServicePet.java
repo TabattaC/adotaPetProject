@@ -1,5 +1,6 @@
 package com.adocaoProject.service;
 
+import com.adocaoProject.handler.BusinessException;
 import com.adocaoProject.model.Ong;
 import com.adocaoProject.model.Pets;
 import com.adocaoProject.repository.OngRepository;
@@ -15,6 +16,9 @@ public class ServicePet {
     private PetRepository petRepository;
     @Autowired
     private OngRepository ongRepository;
+
+    @Autowired
+    private ServiceOng serviceOng;
 
     public List<Pets> listarOngs() {
         return petRepository.findAll();
@@ -35,14 +39,11 @@ public class ServicePet {
         return pets;
     }
 
-    //Salvar uma ONG
-    public Pets salvarPet(Pets pets) {
-        return petRepository.save(pets);
-    }
 
     //Atualizar apenas ONG
-    public Pets atualizarPet(Long id, Pets petAtualizado) {
-        Pets petExistente = buscarPetPorId(id);
+    public Pets atualizarPet(Long petId, Pets petAtualizado) {
+        Pets petExistente = petRepository.findById(petId)
+                .orElseThrow(() -> new BusinessException("Pet não encontrado com o ID: " + petId));
         // Atualizar os campos conforme necessário
         petExistente.setNome(petAtualizado.getNome());
         petExistente.setTipoPet(petAtualizado.getTipoPet());
