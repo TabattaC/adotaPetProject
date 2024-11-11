@@ -1,4 +1,4 @@
-package com.adocaoProject.handler;
+package com.adotaPetProject.handler;
 
 public class BusinessException extends RuntimeException{
     public BusinessException(String mensagem){
