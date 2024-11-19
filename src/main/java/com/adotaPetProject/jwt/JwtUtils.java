@@ -3,18 +3,19 @@ package com.adotaPetProject.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Service
 public class JwtUtils {
-    private String secret = "btechday";
+    private String secret = "4d0fe58b5e7a8c6c4d7b0f80b77a8e9e7b7d8d6f8a9b4c6e9e7d8a9f9c8a2b6f";
 
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
@@ -42,11 +43,14 @@ public class JwtUtils {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims)
+        SecretKey signingKey = Keys.hmacShaKeyFor(secret.getBytes());
+        return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas de expiração
+                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

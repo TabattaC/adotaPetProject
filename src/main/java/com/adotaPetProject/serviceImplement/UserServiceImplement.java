@@ -3,15 +3,20 @@ package com.adotaPetProject.serviceImplement;
 import com.adotaPetProject.constants.AdotaPetConstants;
 import com.adotaPetProject.dao.UserDao;
 import com.adotaPetProject.handler.BusinessException;
+import com.adotaPetProject.jwt.CustomerUserDetailsService;
+import com.adotaPetProject.jwt.JWTFilter;
+import com.adotaPetProject.jwt.JwtUtils;
 import com.adotaPetProject.model.User;
 import com.adotaPetProject.service.UserService;
 import com.adotaPetProject.utils.AdotaPetUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -24,6 +29,12 @@ import static com.adotaPetProject.constants.AdotaPetConstants.*;
 public class UserServiceImplement implements UserService {
     @Autowired
     UserDao userDao;
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    CustomerUserDetailsService customerUserDetailsService;
+    @Autowired
+    JwtUtils jwtUtils;
 
     @Override
     public ResponseEntity<String> signup(Map<String, String> requestMap) {
@@ -35,9 +46,9 @@ public class UserServiceImplement implements UserService {
                     userDao.save(getUserFromMap(requestMap));
                     return AdotaPetUtils.getResponseEntity(SUCCESSFULLY_REGISTERED, HttpStatus.OK);
                 } else {
-                   return AdotaPetUtils.getResponseEntity(EMAIL_ALREADY_EXIST, HttpStatus.BAD_REQUEST);
+                    return AdotaPetUtils.getResponseEntity(EMAIL_ALREADY_EXIST, HttpStatus.BAD_REQUEST);
                 }
-            }else{
+            } else {
                 return AdotaPetUtils.getResponseEntity(INVALID_DATA, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
@@ -46,7 +57,8 @@ public class UserServiceImplement implements UserService {
 
     }
 
-    private User getUserFromMap(Map<String,String> requestMap){
+
+    private User getUserFromMap(Map<String, String> requestMap) {
         User user = new User();
         user.setName(requestMap.get("name"));
         user.setContactNumber(requestMap.get("contactNumber"));
@@ -60,4 +72,26 @@ public class UserServiceImplement implements UserService {
     private boolean valideSignUpMap(Map<String, String> requestMap) {
         return requestMap.containsKey("name") && requestMap.containsKey("contactNumber") && requestMap.containsKey("email") && requestMap.containsKey("password");
     }
+
+    @Override
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
+        log.info("Login.");
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password"))
+            );
+            if (authentication.isAuthenticated()) {
+                if (customerUserDetailsService.getUserDetails().getStatus().equalsIgnoreCase("true")) {
+                    return new ResponseEntity<String>("{\"token\":\"" + jwtUtils.generateToken(customerUserDetailsService.getUserDetails().getEmail(),
+                            customerUserDetailsService.getUserDetails().getRole()) + "\"}", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<String>("{\"message\":\"" + " Wait for admin approval." + "\"}", HttpStatus.BAD_REQUEST);
+                }
+            }
+        } catch (Exception e) {
+            log.error("{}", e);
+        }
+        return new ResponseEntity<String>("{\"message\":\"" + " Bad Credentials." + "\"}", HttpStatus.BAD_REQUEST);
+    }
+
 }
