@@ -7,8 +7,10 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
-@NamedQuery(name = "User.findByEmailId", query="select u from User u where u.email=:email")
-@NamedQuery(name = "User.getAllUsers", query="select new com.adotaPetProject.wrapper.UserWrapper(u.id,u.name,u.email,u.contactNumber,u.status) from User u where u.role='user'")
+
+@NamedQuery(name = "User.findByEmailId", query = "select u from User u where u.email=:email")
+@NamedQuery(name = "User.getAllUsers", query = "select new com.adotaPetProject.wrapper.UserWrapper(u.id,u.name,u.email,u.contactNumber,u.status) from User u where u.role='user'")
+@NamedQuery(name = "User.updateStatus", query = "update User u set u.status=:status where u.id=id")
 
 @Data
 @Entity
@@ -27,19 +29,19 @@ public class User implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name="contactNumber")
+    @Column(name = "contactNumber")
     private String contactNumber;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name="status")
+    @Column(name = "status")
     private String status;
 
-    @Column(name="role")
+    @Column(name = "role")
     private String role;
 
 }
