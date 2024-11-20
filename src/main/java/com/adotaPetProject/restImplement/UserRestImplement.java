@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.adotaPetProject.constants.AdotaPetConstants.SOMETHING_WENT_WRONG;
+
 @Controller
 public class UserRestImplement implements UserRest {
     @Autowired
@@ -24,7 +26,7 @@ public class UserRestImplement implements UserRest {
         try{
         return userService.signup(requestMap);
         }catch (Exception ex){
-            throw new BusinessException(AdotaPetConstants.SOMETHING_WENT_WRONG);
+            throw new BusinessException(SOMETHING_WENT_WRONG);
         }
     }
 
@@ -35,7 +37,7 @@ public class UserRestImplement implements UserRest {
         }catch (Exception e){
             e.printStackTrace();
         }
-         return AdotaPetUtils.getResponseEntity(AdotaPetConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+         return AdotaPetUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -50,6 +52,10 @@ public class UserRestImplement implements UserRest {
 
     @Override
     public ResponseEntity<String> update(Map<String, String> requestMap) {
-        return null;
+       try {
+            return userService.update(requestMap);
+       }catch (Exception e){
+           return AdotaPetUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+       }
     }
 }

@@ -20,10 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.adotaPetProject.constants.AdotaPetConstants.*;
 
@@ -101,16 +98,37 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public ResponseEntity<List<UserWrapper>> getAllUsers() {
-        try{
-            if(jwtFilter.isAdmin()){
+        try {
+            if (jwtFilter.isAdmin()) {
                 return new ResponseEntity<>(userDao.getAllUsers(), HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> update(Map<String, String> requestMap) {
+        try {
+            if (jwtFilter.isUser()) {
+                Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
+                if (!optional.isEmpty()) {
+                    userDao.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                } else {
+                    return AdotaPetUtils.getResponseEntity(USER_DOESNOT_EXIST, HttpStatus.OK);
+
+                }
+
+            } else {
+                return AdotaPetUtils.getResponseEntity(UNAUTHORIZED_ACESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AdotaPetUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
