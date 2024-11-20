@@ -9,6 +9,7 @@ import com.adotaPetProject.jwt.JwtUtils;
 import com.adotaPetProject.model.User;
 import com.adotaPetProject.service.UserService;
 import com.adotaPetProject.utils.AdotaPetUtils;
+import com.adotaPetProject.wrapper.UserWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,6 +38,8 @@ public class UserServiceImplement implements UserService {
     CustomerUserDetailsService customerUserDetailsService;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    JWTFilter jwtFilter;
 
     @Override
     public ResponseEntity<String> signup(Map<String, String> requestMap) {
@@ -92,6 +97,20 @@ public class UserServiceImplement implements UserService {
             log.error("{}", e);
         }
         return new ResponseEntity<String>("{\"message\":\"" + " Bad Credentials." + "\"}", HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<List<UserWrapper>> getAllUsers() {
+        try{
+            if(jwtFilter.isAdmin()){
+                return new ResponseEntity<>(userDao.getAllUsers(), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.adotaPetProject.rest;
 
 import com.adotaPetProject.wrapper.UserWrapper;
+import org.apache.coyote.Request;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,4 +21,6 @@ public interface UserRest {
 
     @GetMapping(path = "/get")
     public ResponseEntity<List<UserWrapper>> getAllUsers();
+    @PostMapping(path = "/update")
+    public ResponseEntity<String> update(@RequestBody(required = true)Map<String,String>requestMap);
 }
