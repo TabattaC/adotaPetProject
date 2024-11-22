@@ -1,11 +1,10 @@
-package com.adotaPetProject.restImplement;
+package com.cupcakeProject.restImplement;
 
-import com.adotaPetProject.constants.AdotaPetConstants;
-import com.adotaPetProject.handler.BusinessException;
-import com.adotaPetProject.rest.UserRest;
-import com.adotaPetProject.service.UserService;
-import com.adotaPetProject.utils.AdotaPetUtils;
-import com.adotaPetProject.wrapper.UserWrapper;
+import com.cupcakeProject.handler.BusinessException;
+import com.cupcakeProject.rest.UserRest;
+import com.cupcakeProject.service.UserService;
+import com.cupcakeProject.utils.CupcakeProjectUtils;
+import com.cupcakeProject.wrapper.UserWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.adotaPetProject.constants.AdotaPetConstants.SOMETHING_WENT_WRONG;
+import static com.cupcakeProject.constants.AdotaPetConstants.SOMETHING_WENT_WRONG;
 
 @Controller
 public class UserRestImplement implements UserRest {
@@ -37,7 +36,7 @@ public class UserRestImplement implements UserRest {
         }catch (Exception e){
             e.printStackTrace();
         }
-         return AdotaPetUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+         return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -55,7 +54,12 @@ public class UserRestImplement implements UserRest {
        try {
             return userService.update(requestMap);
        }catch (Exception e){
-           return AdotaPetUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+           return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
        }
+    }
+
+    @Override
+    public ResponseEntity<String> checkToken() {
+        return null;
     }
 }

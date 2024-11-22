@@ -1,4 +1,4 @@
-package com.adotaPetProject.wrapper;
+package com.cupcakeProject.wrapper;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
-package com.adotaPetProject.service;
+package com.cupcakeProject.service;
 
-import com.adotaPetProject.wrapper.UserWrapper;
+import com.cupcakeProject.wrapper.UserWrapper;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

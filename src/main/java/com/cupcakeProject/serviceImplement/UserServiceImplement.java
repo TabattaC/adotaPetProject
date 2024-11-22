@@ -1,15 +1,15 @@
-package com.adotaPetProject.serviceImplement;
+package com.cupcakeProject.serviceImplement;
 
-import com.adotaPetProject.constants.AdotaPetConstants;
-import com.adotaPetProject.dao.UserDao;
-import com.adotaPetProject.handler.BusinessException;
-import com.adotaPetProject.jwt.CustomerUserDetailsService;
-import com.adotaPetProject.jwt.JWTFilter;
-import com.adotaPetProject.jwt.JwtUtils;
-import com.adotaPetProject.model.User;
-import com.adotaPetProject.service.UserService;
-import com.adotaPetProject.utils.AdotaPetUtils;
-import com.adotaPetProject.wrapper.UserWrapper;
+import com.cupcakeProject.dao.UserDao;
+import com.cupcakeProject.handler.BusinessException;
+import com.cupcakeProject.jwt.CustomerUserDetailsService;
+import com.cupcakeProject.jwt.JWTFilter;
+import com.cupcakeProject.jwt.JwtUtils;
+import com.cupcakeProject.model.User;
+import com.cupcakeProject.service.UserService;
+import com.cupcakeProject.utils.CupcakeProjectUtils;
+import com.cupcakeProject.utils.EmailUtils;
+import com.cupcakeProject.wrapper.UserWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.adotaPetProject.constants.AdotaPetConstants.*;
+import static com.cupcakeProject.constants.AdotaPetConstants.*;
 
 @Slf4j
 @Service
@@ -37,6 +37,8 @@ public class UserServiceImplement implements UserService {
     JwtUtils jwtUtils;
     @Autowired
     JWTFilter jwtFilter;
+    @Autowired
+    EmailUtils emailUtils;
 
     @Override
     public ResponseEntity<String> signup(Map<String, String> requestMap) {
@@ -46,12 +48,12 @@ public class UserServiceImplement implements UserService {
                 User user = userDao.findByEmailId(requestMap.get("email"));
                 if (Objects.isNull(user)) {
                     userDao.save(getUserFromMap(requestMap));
-                    return AdotaPetUtils.getResponseEntity(SUCCESSFULLY_REGISTERED, HttpStatus.OK);
+                    return CupcakeProjectUtils.getResponseEntity(SUCCESSFULLY_REGISTERED, HttpStatus.OK);
                 } else {
-                    return AdotaPetUtils.getResponseEntity(EMAIL_ALREADY_EXIST, HttpStatus.BAD_REQUEST);
+                    return CupcakeProjectUtils.getResponseEntity(EMAIL_ALREADY_EXIST, HttpStatus.BAD_REQUEST);
                 }
             } else {
-                return AdotaPetUtils.getResponseEntity(INVALID_DATA, HttpStatus.BAD_REQUEST);
+                return CupcakeProjectUtils.getResponseEntity(INVALID_DATA, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             throw new BusinessException(SOMETHING_WENT_WRONG);
@@ -113,22 +115,34 @@ public class UserServiceImplement implements UserService {
     @Override
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         try {
-            if (jwtFilter.isUser()) {
+            if (jwtFilter.isAdmin()) {
                 Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
                 if (!optional.isEmpty()) {
                     userDao.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    sendMailToAllAdmin(requestMap.get("status"), optional.get().getEmail(), userDao.getAllAdmin());
+                    return CupcakeProjectUtils.getResponseEntity(UPDATE_SUCESS, HttpStatus.OK);
                 } else {
-                    return AdotaPetUtils.getResponseEntity(USER_DOESNOT_EXIST, HttpStatus.OK);
+                    return CupcakeProjectUtils.getResponseEntity(USER_DOESNOT_EXIST, HttpStatus.OK);
 
                 }
 
             } else {
-                return AdotaPetUtils.getResponseEntity(UNAUTHORIZED_ACESS, HttpStatus.UNAUTHORIZED);
+                return CupcakeProjectUtils.getResponseEntity(UNAUTHORIZED_ACESS, HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return AdotaPetUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void sendMailToAllAdmin(String status, String user, List<String> allAdmin) {
+        allAdmin.remove(jwtFilter.getCurrentUser());
+        if (status != null && status.equalsIgnoreCase("true")) {
+            emailUtils.sendSimpleMassage(jwtFilter.getCurrentUser(), "Account Approved", "USER: - " + user + "\n is approved by\nADMIN: - " + jwtFilter.getCurrentUser(), allAdmin);
+        } else {
+            emailUtils.sendSimpleMassage(jwtFilter.getCurrentUser(), "Account Disabled", "USER: - " + user + "\n is disabled by\nADMIN- " + jwtFilter.getCurrentUser(), allAdmin);
+
+        }
     }
 
 }
