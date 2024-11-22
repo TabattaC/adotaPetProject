@@ -1,8 +1,7 @@
-package com.adotaPetProject.jwt;
+package com.cupcakeProject.jwt;
 
-import com.adotaPetProject.dao.UserDao;
-import com.adotaPetProject.handler.GlobalExceptionHandler;
-import com.adotaPetProject.handler.NotFoundException;
+import com.cupcakeProject.dao.UserDao;
+import com.cupcakeProject.handler.NotFoundException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,9 @@ import java.util.Objects;
 public class CustomerUserDetailsService implements UserDetailsService {
     @Autowired
     UserDao userDao;
+
     @Getter
-    private com.adotaPetProject.model.User userDetails;
+    private com.cupcakeProject.model.User userDetails;
 
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {

@@ -1,4 +1,4 @@
-package com.adotaPetProject.handler;
+package com.cupcakeProject.handler;
 
 public class CampoObrigatorioException extends BusinessException{
     public CampoObrigatorioException(String campo) {

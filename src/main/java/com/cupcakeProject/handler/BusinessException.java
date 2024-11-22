@@ -1,4 +1,4 @@
-package com.adotaPetProject.handler;
+package com.cupcakeProject.handler;
 
 public class BusinessException extends RuntimeException{
     public BusinessException(String mensagem){

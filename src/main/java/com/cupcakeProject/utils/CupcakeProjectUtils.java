@@ -1,11 +1,11 @@
-package com.adotaPetProject.utils;
+package com.cupcakeProject.utils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class AdotaPetUtils {
+public class CupcakeProjectUtils {
 
-    private AdotaPetUtils(){
+    private CupcakeProjectUtils(){
 
     }
     public static ResponseEntity<String> getResponseEntity(String message, HttpStatus status){
