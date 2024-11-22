@@ -1,4 +1,4 @@
-package com.adotaPetProject.jwt;
+package com.cupcakeProject.jwt;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -58,8 +57,9 @@ public class JWTFilter extends OncePerRequestFilter {
         return "user".equalsIgnoreCase((String) claims.get("role"));
     }
 
-    public String getCurrentUserName() {
+    public String getCurrentUser() {
         return userName;
     }
+
 
 }

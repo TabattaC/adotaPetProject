@@ -1,4 +1,4 @@
-package com.adotaPetProject.handler;
+package com.cupcakeProject.handler;
 
 import jakarta.annotation.Resource;
 import org.springframework.context.MessageSource;
@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
