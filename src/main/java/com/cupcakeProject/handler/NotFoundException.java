@@ -1,4 +1,4 @@
-package com.adotaPetProject.handler;
+package com.cupcakeProject.handler;
 
 public class NotFoundException extends RuntimeException {
   public NotFoundException(String message) {
