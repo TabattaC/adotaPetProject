@@ -1,4 +1,4 @@
-package com.adotaPetProject.model;
+package com.cupcakeProject.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,8 +9,9 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @NamedQuery(name = "User.findByEmailId", query = "select u from User u where u.email=:email")
-@NamedQuery(name = "User.getAllUsers", query = "select new com.adotaPetProject.wrapper.UserWrapper(u.id,u.name,u.email,u.contactNumber,u.status) from User u where u.role='user'")
-@NamedQuery(name = "User.updateStatus", query = "update User u set u.status=:status where u.id=id")
+@NamedQuery(name = "User.getAllUsers", query = "select new com.cupcakeProject.wrapper.UserWrapper(u.id,u.name,u.email,u.contactNumber,u.status) from User u where u.role='user'")
+@NamedQuery(name = "User.updateStatus", query = "update User u set u.status=:status where u.id=:id")
+@NamedQuery(name = "User.getAllAdmin", query = "select u.email from User u where u.role='admin'")
 
 @Data
 @Entity
