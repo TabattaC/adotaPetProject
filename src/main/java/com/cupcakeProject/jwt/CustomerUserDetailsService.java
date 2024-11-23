@@ -1,6 +1,6 @@
 package com.cupcakeProject.jwt;
 
-import com.cupcakeProject.dao.UserDao;
+import com.cupcakeProject.repository.UserDao;
 import com.cupcakeProject.handler.NotFoundException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
