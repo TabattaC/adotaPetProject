@@ -6,11 +6,14 @@ import com.cupcakeProject.model.Product;
 import com.cupcakeProject.repository.ProductDao;
 import com.cupcakeProject.service.ProductService;
 import com.cupcakeProject.utils.CupcakeProjectUtils;
+import com.cupcakeProject.wrapper.ProductWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.cupcakeProject.constants.CupcakeProjectConstants.*;
@@ -41,6 +44,7 @@ public class ProductServiceImplement implements ProductService {
         return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
     private boolean validateProductMap(Map<String, String> requestMap, boolean validateId) {
         if (requestMap.containsKey("name")) {
             if (requestMap.containsKey("id") && validateId) {
@@ -67,5 +71,15 @@ public class ProductServiceImplement implements ProductService {
         product.setDescription(requestMap.get("description"));
         product.setPrice(Integer.parseInt(requestMap.get("price")));
         return product;
+    }
+
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getAllProduct() {
+        try {
+           return new ResponseEntity<>(productDao.getAllProduct(),HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
