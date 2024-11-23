@@ -1,6 +1,6 @@
 package com.cupcakeProject.serviceImplement;
 
-import com.cupcakeProject.dao.UserDao;
+import com.cupcakeProject.repository.UserDao;
 import com.cupcakeProject.handler.BusinessException;
 import com.cupcakeProject.jwt.CustomerUserDetailsService;
 import com.cupcakeProject.jwt.JWTFilter;
@@ -10,6 +10,7 @@ import com.cupcakeProject.service.UserService;
 import com.cupcakeProject.utils.CupcakeProjectUtils;
 import com.cupcakeProject.utils.EmailUtils;
 import com.cupcakeProject.wrapper.UserWrapper;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,19 @@ import static com.cupcakeProject.constants.AdotaPetConstants.*;
 public class UserServiceImplement implements UserService {
     @Autowired
     UserDao userDao;
+
     @Autowired
     AuthenticationManager authenticationManager;
+
     @Autowired
     CustomerUserDetailsService customerUserDetailsService;
+
     @Autowired
     JwtUtils jwtUtils;
+
     @Autowired
     JWTFilter jwtFilter;
+
     @Autowired
     EmailUtils emailUtils;
 
@@ -129,6 +135,46 @@ public class UserServiceImplement implements UserService {
             } else {
                 return CupcakeProjectUtils.getResponseEntity(UNAUTHORIZED_ACESS, HttpStatus.UNAUTHORIZED);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> checkToken() {
+        return CupcakeProjectUtils.getResponseEntity("true", HttpStatus.OK);
+
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestmap) {
+        try {
+            User userObj = userDao.findByEmail(jwtFilter.getCurrentUser());
+            if (userObj != null) {
+                if (userObj.getPassword().equals(requestmap.get("oldPassword"))) {
+                    userObj.setPassword(requestmap.get("newPassword"));
+                    userDao.save(userObj);
+                    return CupcakeProjectUtils.getResponseEntity(PASSWORD_UPDATED, HttpStatus.OK);
+                }
+                return CupcakeProjectUtils.getResponseEntity(INCORRECT_OLD_PASSWORD, HttpStatus.BAD_REQUEST);
+
+            }
+            return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestmap) {
+        try {
+            User user = userDao.findByEmail(requestmap.get("email"));
+            if (!Objects.isNull(user) && !Strings.isNullOrEmpty(user.getEmail())) {
+                emailUtils.forgotEmail(user.getEmail(), "Credentials by Cupcake Store Managment System", user.getPassword());
+            }
+            return CupcakeProjectUtils.getResponseEntity(CHECK_EMAIL, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }

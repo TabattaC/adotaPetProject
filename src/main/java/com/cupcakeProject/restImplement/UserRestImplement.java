@@ -20,11 +20,12 @@ import static com.cupcakeProject.constants.AdotaPetConstants.SOMETHING_WENT_WRON
 public class UserRestImplement implements UserRest {
     @Autowired
     UserService userService;
+
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
-        try{
-        return userService.signup(requestMap);
-        }catch (Exception ex){
+        try {
+            return userService.signup(requestMap);
+        } catch (Exception ex) {
             throw new BusinessException(SOMETHING_WENT_WRONG);
         }
     }
@@ -33,17 +34,17 @@ public class UserRestImplement implements UserRest {
     public ResponseEntity<String> login(Map<String, String> requestMap) {
         try {
             return userService.login(requestMap);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-         return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     public ResponseEntity<List<UserWrapper>> getAllUsers() {
-        try{
+        try {
             return userService.getAllUsers();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<List<UserWrapper>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,15 +52,40 @@ public class UserRestImplement implements UserRest {
 
     @Override
     public ResponseEntity<String> update(Map<String, String> requestMap) {
-       try {
+        try {
             return userService.update(requestMap);
-       }catch (Exception e){
-           return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
-       }
+        } catch (Exception e) {
+            return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
     public ResponseEntity<String> checkToken() {
-        return null;
+        try {
+            return userService.checkToken();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestmap) {
+        try {
+            return userService.changePassword(requestmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestmap) {
+        try {
+            return userService.forgotPassword(requestmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
