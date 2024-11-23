@@ -15,5 +15,7 @@ public class CupcakeProjectConstants {
     public static final String CATEGORY_ID_NOT_EXIST = "Category id does not exist.";
     public static final String CATEGORY_UPDATE = "Category update successfully.";
     public static final String PRODUCT_ADD = "Product added successfully.";
+    public static final String PRODUCT_NOT_EXIST = "Product id des not exist.";
+    public static final String PRODUCT_UPDATE = "Product update successfully.";
 
 }
