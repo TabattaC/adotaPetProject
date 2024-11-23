@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.cupcakeProject.constants.AdotaPetConstants.SOMETHING_WENT_WRONG;
+import static com.cupcakeProject.constants.CupcakeProjectConstants.SOMETHING_WENT_WRONG;
 
 @Controller
 public class UserRestImplement implements UserRest {

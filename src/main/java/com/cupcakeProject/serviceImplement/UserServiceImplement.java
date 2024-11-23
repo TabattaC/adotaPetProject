@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.cupcakeProject.constants.AdotaPetConstants.*;
+import static com.cupcakeProject.constants.CupcakeProjectConstants.*;
 
 @Slf4j
 @Service
