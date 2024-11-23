@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.cupcakeProject.constants.CupcakeProjectConstants.*;
 
@@ -76,10 +77,36 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<List<ProductWrapper>> getAllProduct() {
         try {
-           return new ResponseEntity<>(productDao.getAllProduct(),HttpStatus.OK);
+            return new ResponseEntity<>(productDao.getAllProduct(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateProduct(Map<String, String> requestMap) {
+        try {
+            if(jwtFilter.isAdmin()){
+                if(validateProductMap(requestMap,true)){
+                  Optional<Product>optional = productDao.findById(Integer.parseInt(requestMap.get("id")));
+                  if(!optional.isEmpty()){
+                      Product product = getProductFromMap(requestMap, true);
+                      product.setStatus(optional.get().getStatus());
+                      productDao.save(product);
+                      return CupcakeProjectUtils.getResponseEntity(PRODUCT_UPDATE, HttpStatus.OK);
+                  }else {
+                      return CupcakeProjectUtils.getResponseEntity(PRODUCT_NOT_EXIST,HttpStatus.BAD_REQUEST);
+                  }
+                }else {
+                    CupcakeProjectUtils.getResponseEntity(INVALID_DATA,HttpStatus.BAD_REQUEST);
+
+                }
+                CupcakeProjectUtils.getResponseEntity(UNAUTHORIZED_ACESS,HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
