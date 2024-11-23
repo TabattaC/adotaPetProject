@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.cupcakeProject.constants.AdotaPetConstants.*;
+import static com.cupcakeProject.constants.CupcakeProjectConstants.*;
 
 @Slf4j
 @Service
