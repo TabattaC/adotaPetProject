@@ -1,6 +1,6 @@
 package com.cupcakeProject.constants;
 
-public class AdotaPetConstants {
+public class CupcakeProjectConstants {
     public static final String SOMETHING_WENT_WRONG = "Something went wrong.";
     public static final String INVALID_DATA = "Invalid Data.";
     public static final String EMAIL_ALREADY_EXIST = "Email already exist";
@@ -14,5 +14,6 @@ public class AdotaPetConstants {
     public static final String CATEGORY_ADD = "Category add successfully.";
     public static final String CATEGORY_ID_NOT_EXIST = "Category id does not exist.";
     public static final String CATEGORY_UPDATE = "Category update successfully.";
+    public static final String PRODUCT_ADD = "Product added successfully.";
 
 }
