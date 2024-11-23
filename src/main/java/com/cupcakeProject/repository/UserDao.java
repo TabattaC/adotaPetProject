@@ -1,4 +1,4 @@
-package com.cupcakeProject.dao;
+package com.cupcakeProject.repository;
 
 import com.cupcakeProject.model.User;
 import com.cupcakeProject.wrapper.UserWrapper;
@@ -20,5 +20,7 @@ public interface UserDao extends JpaRepository<User, Integer> {
     @Modifying
     @Transactional
     Integer updateStatus(@Param("status") String status, @Param("id") Integer id);
+
+    User findByEmail(String email);
 
 }
