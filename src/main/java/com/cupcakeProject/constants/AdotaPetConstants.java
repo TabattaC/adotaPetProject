@@ -12,5 +12,7 @@ public class AdotaPetConstants {
     public static final String PASSWORD_UPDATED = "Password Updated Successfully.";
     public static final String CHECK_EMAIL = "Check your mail for Credentials.";
     public static final String CATEGORY_ADD = "Category add successfully.";
+    public static final String CATEGORY_ID_NOT_EXIST = "Category id does not exist.";
+    public static final String CATEGORY_UPDATE = "Category update successfully.";
 
 }

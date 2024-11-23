@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.cupcakeProject.constants.AdotaPetConstants.*;
+
 @Slf4j
 @Service
 public class CategoryServiceImplement implements CategoryService {
@@ -48,11 +50,12 @@ public class CategoryServiceImplement implements CategoryService {
     @Override
     public ResponseEntity<List<Category>> getAllCategory(String filterValue) {
         try {
-            if(!Strings.isNullOrEmpty(filterValue) && filterValue.equalsIgnoreCase("true")){
+            if (!Strings.isNullOrEmpty(filterValue) && filterValue.equalsIgnoreCase("true")) {
                 log.info("Inside if");
-                return new ResponseEntity<List<Category>>(categoryDao.getAllCategory(),HttpStatus.OK)
-;            }
-            return new ResponseEntity<>(categoryDao.findAll(),HttpStatus.OK);
+                return new ResponseEntity<List<Category>>(categoryDao.getAllCategory(), HttpStatus.OK)
+                        ;
+            }
+            return new ResponseEntity<>(categoryDao.findAll(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +64,25 @@ public class CategoryServiceImplement implements CategoryService {
 
     @Override
     public ResponseEntity<String> updateCategory(Map<String, String> requestMap) {
-        return null;
+        try {
+            if (jwtFilter.isAdmin()) {
+                if (validateCategoryMap(requestMap, true)) {
+                    Optional optional = categoryDao.findById(Integer.parseInt(requestMap.get("id")));
+                    if (!optional.isEmpty()) {
+                        categoryDao.save(getCategoryFromMap(requestMap, true));
+                        return CupcakeProjectUtils.getResponseEntity(CATEGORY_UPDATE, HttpStatus.OK);
+                    } else {
+                        return CupcakeProjectUtils.getResponseEntity(CATEGORY_ID_NOT_EXIST, HttpStatus.OK);
+                    }
+                }
+                return CupcakeProjectUtils.getResponseEntity(INVALID_DATA, HttpStatus.BAD_REQUEST);
+            } else {
+                return CupcakeProjectUtils.getResponseEntity(UNAUTHORIZED_ACESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private boolean validateCategoryMap(Map<String, String> requestMap, boolean validateId) {
