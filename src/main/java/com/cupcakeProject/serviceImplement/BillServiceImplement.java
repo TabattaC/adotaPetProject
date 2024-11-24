@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -81,7 +83,6 @@ public class BillServiceImplement implements BillService {
         }
         return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
     private void insertBill(Map<String, Object> requestMap) {
         try {
@@ -163,5 +164,20 @@ public class BillServiceImplement implements BillService {
         table.addCell((Double.toString((Double) data.get("total"))));
     }
 
+    @Override
+    public ResponseEntity<List<Bill>> getBills() {
+        try {
+            List<Bill> list = new ArrayList<>();
+            if(jwtFilter.isAdmin()){
+                list = billDao.getAllBills();
+            }else {
+                list = billDao.getBillByUserName(jwtFilter.getCurrentUser());
+            }
+            return new ResponseEntity<>(list,HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }
