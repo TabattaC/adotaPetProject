@@ -19,5 +19,6 @@ public class CupcakeProjectConstants {
     public static final String PRODUCT_UPDATE = "Product update successfully.";
     public static final String PRODUCT_DELETE = "Product delete successfully.";
     public static final String PRODUCT_STATUS_UPDATE = "Product status update successfully.";
+    public static final String STORE_LOCALTION = "src/main/resources/pdf";
 
 }
