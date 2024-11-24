@@ -4,6 +4,7 @@ import com.cupcakeProject.model.Bill;
 import com.cupcakeProject.rest.BillRest;
 import com.cupcakeProject.service.BillService;
 import com.cupcakeProject.utils.CupcakeProjectUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,26 @@ public class BillRestImplement implements BillRest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>( new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getPdf(Map<String, Object> requestMap) {
+        try {
+            billService.getPdf(requestMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<String> deleteBill(Integer id) {
+        try {
+            return billService.deleteBill(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CupcakeProjectUtils.getResponseEntity(SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -20,5 +20,7 @@ public class CupcakeProjectConstants {
     public static final String PRODUCT_DELETE = "Product delete successfully.";
     public static final String PRODUCT_STATUS_UPDATE = "Product status update successfully.";
     public static final String STORE_LOCALTION = "src/main/resources/pdf";
+    public static final String BILL_ID_NOT_EXIST = "Bill id does not exist";
+    public static final String BILL_DELETE = "Bill delete successfully.";
 
 }
